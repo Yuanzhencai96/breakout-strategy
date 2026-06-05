@@ -1,0 +1,1394 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Breakout Strategy · Imperial MBA Elective · The Laerdal Case</title>
+<meta name="description" content="Reflections from a three-day Breakout Strategy elective at Imperial College London, and the high-growth strategy my team built for Laerdal Medical." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #eaf1f8;
+    --ink: #0f1e30;
+    --muted: #4f6479;
+    --rule: #d3e0ec;
+    --accent: #003e74;
+    --accent-soft: #d6e4f1;
+    --accent-deep: #002c54;
+    --accent-warm: #b87333;
+    --paper: #ffffff;
+    --good: #2f7d4f;
+    --shadow: 0 1px 2px rgba(0, 30, 70, .05), 0 8px 24px rgba(0, 30, 70, .08);
+    --shadow-lift: 0 4px 8px rgba(0, 30, 70, .08), 0 20px 40px rgba(0, 30, 70, .12);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 17px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  img { max-width: 100%; display: block; }
+
+  /* ---------- NAV ---------- */
+  .nav {
+    position: sticky;
+    top: 0;
+    background: rgba(234, 241, 248, 0.82);
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    border-bottom: 1px solid var(--rule);
+    z-index: 50;
+    transition: box-shadow .3s ease;
+  }
+  .nav.scrolled { box-shadow: 0 4px 20px rgba(0, 30, 70, .06); }
+  .nav-links a { position: relative; }
+  .nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -6px;
+    height: 1px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .3s cubic-bezier(.2,.8,.2,1);
+  }
+  .nav-links a:hover::after { transform: scaleX(1); }
+  .nav-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .brand {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+  }
+  .brand .dot { color: var(--accent); }
+  .nav-links {
+    display: flex;
+    gap: 26px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .nav-links a {
+    color: inherit;
+    text-decoration: none;
+    transition: color .2s ease;
+  }
+  .nav-links a:hover { color: var(--ink); }
+  @media (max-width: 820px) { .nav-links { display: none; } }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 80px 28px 60px;
+  }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 28px;
+    height: 1px;
+    background: var(--accent);
+  }
+  h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(38px, 6vw, 74px);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin: 0 0 28px;
+    max-width: 960px;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 400;
+  }
+  .lede {
+    font-size: 20px;
+    line-height: 1.55;
+    color: var(--muted);
+    max-width: 740px;
+    margin: 0 0 36px;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .meta span strong {
+    color: var(--ink);
+    font-weight: 600;
+    margin-right: 6px;
+  }
+
+  /* ---------- HERO IMAGE ---------- */
+  .hero-image {
+    max-width: 1040px;
+    margin: 0 auto 100px;
+    padding: 0 28px;
+  }
+  .hero-image figure {
+    margin: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    background: var(--accent-soft);
+    aspect-ratio: 16 / 9;
+    transition: box-shadow .5s ease;
+  }
+  .hero-image figure:hover { box-shadow: var(--shadow-lift); }
+  .hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s cubic-bezier(.2,.8,.2,1);
+  }
+  .hero-image figure:hover img { transform: scale(1.04); }
+  .hero-image figcaption {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--muted);
+    text-align: center;
+    font-style: italic;
+  }
+
+  /* ---------- ARTICLE ---------- */
+  .article {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+  .article h2 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin: 80px 0 24px;
+  }
+  .article h3 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 26px;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    margin: 56px 0 16px;
+    color: var(--ink);
+  }
+  .article p { margin: 0 0 22px; }
+  .article p.first::first-letter {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 64px;
+    line-height: 0.9;
+    float: left;
+    padding: 6px 12px 0 0;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .article ul,
+  .day-card ul {
+    padding-left: 0;
+    list-style: none;
+    margin: 0 0 28px;
+  }
+  .article ul li,
+  .day-card ul li {
+    position: relative;
+    padding-left: 24px;
+    margin-bottom: 12px;
+  }
+  .article ul li::before,
+  .day-card ul li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 12px;
+    width: 12px;
+    height: 1px;
+    background: var(--accent);
+    transition: width .3s ease;
+  }
+  .article ul li:hover::before,
+  .day-card ul li:hover::before { width: 20px; }
+
+  .day-card a,
+  .article a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent-soft);
+    transition: border-color .25s ease, color .25s ease;
+  }
+  .day-card a:hover,
+  .article a:hover {
+    border-bottom-color: var(--accent);
+    color: var(--accent-deep);
+  }
+
+  /* ---------- PULL QUOTE ---------- */
+  .pullquote {
+    margin: 56px -40px;
+    padding: 36px 40px;
+    border-left: 3px solid var(--accent);
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-size: 26px;
+    line-height: 1.4;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .pullquote em { color: var(--accent); font-style: italic; }
+  @media (max-width: 720px) {
+    .pullquote { margin: 40px 0; padding: 24px 0 24px 24px; font-size: 22px; }
+  }
+
+  /* ---------- FIGURE ---------- */
+  figure.inline { margin: 40px auto; max-width: 560px; cursor: pointer; }
+  figure.inline .frame {
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    background: var(--accent-soft);
+    transition: box-shadow .4s ease, transform .4s ease;
+  }
+  figure.inline:hover .frame { box-shadow: var(--shadow-lift); transform: translateY(-3px); }
+  figure.inline img { width: 100%; display: block; transition: transform .8s cubic-bezier(.2,.8,.2,1); }
+  figure.inline:hover img { transform: scale(1.06); }
+  figure.inline figcaption {
+    margin-top: 14px; font-size: 13px; color: var(--muted);
+    text-align: center; font-style: italic; transition: color .3s ease;
+  }
+  figure.inline:hover figcaption { color: var(--ink); }
+
+  figure.wide { max-width: 900px; margin: 60px auto; padding: 0 28px; cursor: pointer; }
+  figure.wide .frame {
+    overflow: hidden; border-radius: 10px; box-shadow: var(--shadow);
+    background: var(--accent-soft); transition: box-shadow .4s ease, transform .4s ease;
+  }
+  figure.wide:hover .frame { box-shadow: var(--shadow-lift); transform: translateY(-3px); }
+  figure.wide img { width: 100%; display: block; transition: transform .9s cubic-bezier(.2,.8,.2,1); }
+  figure.wide:hover img { transform: scale(1.04); }
+  figure.wide figcaption {
+    margin-top: 14px; font-size: 13px; color: var(--muted);
+    text-align: center; font-style: italic; transition: color .3s ease;
+  }
+  figure.wide:hover figcaption { color: var(--ink); }
+
+  .duo-figure { margin: 40px auto; max-width: 640px; }
+  .duo-figure figcaption {
+    margin-top: 14px; font-size: 13px; color: var(--muted);
+    text-align: center; font-style: italic;
+  }
+  .duo {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    margin: 0 auto; max-width: 640px;
+  }
+  .duo .frame {
+    overflow: hidden; border-radius: 8px; box-shadow: var(--shadow);
+    background: var(--accent-soft); aspect-ratio: 4 / 3; cursor: pointer;
+    transition: box-shadow .4s ease, transform .4s ease;
+  }
+  .duo .frame:hover { box-shadow: var(--shadow-lift); transform: translateY(-4px); }
+  .duo .frame img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s cubic-bezier(.2,.8,.2,1); }
+  .duo .frame:hover img { transform: scale(1.08); }
+  @media (max-width: 560px) { .duo { grid-template-columns: 1fr; } }
+
+  /* ---------- LEARNINGS / SECTION WRAP ---------- */
+  .learnings { max-width: 1000px; margin: 0 auto; padding: 0 28px; }
+  .learnings > h2 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500; font-size: 36px; line-height: 1.15;
+    letter-spacing: -0.02em; margin: 90px auto 8px; max-width: 720px;
+  }
+  .learnings > .section-lede {
+    max-width: 720px; margin: 0 auto 12px; color: var(--muted); font-size: 18px;
+  }
+
+  /* ---------- DAY / SESSION CARD ---------- */
+  .day-card {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 52px 64px;
+    margin: 36px 0;
+    box-shadow: 0 1px 2px rgba(0, 30, 70, .03);
+    transition: transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease, border-color .4s ease;
+  }
+  .day-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); border-color: var(--accent-soft); }
+  .day-card > h3, .day-card > p, .day-card > ul, .day-card > .note {
+    max-width: 720px; margin-left: auto; margin-right: auto;
+  }
+  .day-card > h3 {
+    margin: 0 auto 24px;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 600; font-size: 30px; line-height: 1.18;
+    letter-spacing: -0.02em; color: var(--ink);
+  }
+  .day-card > h3 .day {
+    display: block;
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic; font-weight: 400; font-size: 21px;
+    text-transform: none; letter-spacing: 0; color: var(--accent-warm);
+    margin-bottom: 10px;
+  }
+  .day-card > p { margin-top: 0; margin-bottom: 22px; }
+  .day-card .note {
+    font-size: 15px; color: var(--muted); font-style: italic;
+    border-top: 1px dashed var(--rule); padding-top: 18px; margin-top: 6px;
+  }
+  .day-card .note strong { color: var(--accent); font-style: normal; font-weight: 600; }
+  @media (max-width: 720px) {
+    .day-card { padding: 32px 22px; }
+    .day-card > h3 { font-size: 24px; }
+  }
+
+  /* ---------- STAT STRIP ---------- */
+  .stats-row {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    max-width: 720px; margin: 8px auto 28px;
+  }
+  .stat-mini {
+    background: linear-gradient(135deg, var(--accent-soft) 0%, #eef4fa 100%);
+    border-radius: 10px; padding: 22px 16px; text-align: center;
+  }
+  .stat-mini .num {
+    font-family: 'Fraunces', Georgia, serif; font-weight: 500;
+    font-size: 34px; line-height: 1; color: var(--accent); letter-spacing: -0.02em;
+  }
+  .stat-mini .lbl { margin-top: 8px; font-size: 12px; color: var(--muted); line-height: 1.35; }
+  @media (max-width: 640px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+
+  /* ============================================================
+     INTERACTIVE COMPONENTS
+     ============================================================ */
+  .interactive {
+    max-width: 1000px; margin: 36px auto; padding: 0 28px;
+  }
+  .ix-card {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 40px 44px 44px;
+    box-shadow: var(--shadow);
+  }
+  .ix-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em;
+    font-weight: 700; color: var(--accent);
+    background: var(--accent-soft); padding: 6px 12px; border-radius: 999px;
+    margin-bottom: 18px;
+  }
+  .ix-card h3 {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 600; font-size: 26px; letter-spacing: -0.02em;
+    margin: 0 0 8px; line-height: 1.2;
+  }
+  .ix-card .ix-sub { color: var(--muted); margin: 0 0 28px; font-size: 16px; }
+  .ix-hint { font-size: 13px; color: var(--muted); font-style: italic; }
+  @media (max-width: 720px) { .ix-card { padding: 28px 20px 32px; } }
+
+  /* ---- Capital cycle cards ---- */
+  .capitals { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .cap {
+    text-align: left; cursor: pointer; border: 1px solid var(--rule);
+    background: #f6f9fc; border-radius: 10px; padding: 18px 16px 16px;
+    transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease, border-color .35s ease, background .35s ease;
+    font-family: inherit; color: inherit;
+  }
+  .cap:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--accent); }
+  .cap.open { background: var(--paper); border-color: var(--accent); box-shadow: var(--shadow-lift); }
+  .cap .cap-ico {
+    width: 38px; height: 38px; border-radius: 9px; display: grid; place-items: center;
+    background: var(--accent-soft); color: var(--accent); font-size: 18px; margin-bottom: 12px;
+  }
+  .cap .cap-name {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 15px;
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .cap .cap-rate {
+    display: inline-block; margin-top: 6px; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-warm);
+  }
+  .cap .cap-body {
+    max-height: 0; overflow: hidden; opacity: 0;
+    transition: max-height .45s ease, opacity .35s ease, margin .35s ease;
+    font-size: 13.5px; color: var(--muted); line-height: 1.5; margin-top: 0;
+  }
+  .cap.open .cap-body { max-height: 240px; opacity: 1; margin-top: 12px; }
+  .cap .meter { height: 5px; border-radius: 99px; background: var(--rule); margin-top: 12px; overflow: hidden; }
+  .cap .meter > i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--accent-warm), var(--accent)); border-radius: 99px; transition: width .8s cubic-bezier(.2,.8,.2,1); }
+  .cap.open .meter > i { width: var(--w, 80%); }
+  .diagnosis {
+    margin-top: 22px; padding: 18px 20px; border-radius: 10px;
+    background: #f6ecd2; border: 1px solid #e6d3a3; color: #6b5410;
+    font-size: 14.5px; line-height: 1.55;
+  }
+  .diagnosis b { color: var(--accent-deep); }
+  @media (max-width: 720px) { .capitals { grid-template-columns: repeat(2, 1fr); } }
+
+  /* ---- Loop toggle ---- */
+  .toggle-row { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+  .toggle-row button {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 13.5px;
+    border: 1px solid var(--rule); background: #f6f9fc; color: var(--muted);
+    padding: 10px 18px; border-radius: 999px; cursor: pointer;
+    transition: all .25s ease;
+  }
+  .toggle-row button:hover { border-color: var(--accent); color: var(--ink); }
+  .toggle-row button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .toggle-row button.active.proposed { background: var(--accent-warm); border-color: var(--accent-warm); }
+  .flow { display: flex; align-items: stretch; gap: 0; flex-wrap: wrap; }
+  .flow .step {
+    flex: 1 1 0; min-width: 110px; text-align: center; padding: 16px 10px;
+    border-radius: 10px; background: #f6f9fc; border: 1px solid var(--rule);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+    opacity: 0; transform: translateY(10px); transition: opacity .5s ease, transform .5s ease;
+  }
+  .flow.show .step { opacity: 1; transform: translateY(0); }
+  .flow .step .s-ico { font-size: 18px; }
+  .flow .step .s-txt { font-size: 12.5px; line-height: 1.3; color: var(--ink); font-weight: 500; }
+  .flow .arrow { align-self: center; color: var(--muted); padding: 0 4px; font-size: 18px; }
+  .flow .step.bad { background: #ece8e0; border-color: #d6d0c4; }
+  .flow .step.bad .s-txt { color: #6f6a5e; }
+  .flow .step.gain { background: var(--accent-soft); border-color: #b7cfe6; }
+  .flow .step.loopback { background: #f6ecd2; border-color: #e6d3a3; }
+  .flow .step.loopback .s-txt { color: #6b5410; }
+  @media (max-width: 720px) {
+    .flow { flex-direction: column; }
+    .flow .arrow { transform: rotate(90deg); padding: 2px 0; }
+  }
+
+  /* ---- Routes matrix ---- */
+  .matrix-wrap { overflow-x: auto; }
+  .matrix {
+    display: grid;
+    grid-template-columns: 130px 1fr 1fr;
+    gap: 10px; min-width: 560px;
+  }
+  .matrix .mh {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
+    display: flex; align-items: flex-end; padding: 0 6px 6px;
+  }
+  .matrix .rh {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 12.5px;
+    color: var(--ink); display: flex; align-items: center; padding-right: 6px; line-height: 1.25;
+  }
+  .cell {
+    text-align: left; cursor: pointer; border: 1px solid var(--rule);
+    background: #f6f9fc; border-radius: 10px; padding: 14px 14px 12px;
+    transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease, background .3s ease;
+    font-family: inherit; color: inherit; position: relative;
+  }
+  .cell:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--accent); z-index: 2; }
+  .cell .c-name { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 14.5px; }
+  .cell .c-def {
+    max-height: 0; overflow: hidden; opacity: 0; font-size: 12.5px; color: var(--muted);
+    line-height: 1.45; transition: max-height .4s ease, opacity .3s ease, margin .3s ease;
+  }
+  .cell.open .c-def, .cell:hover .c-def { max-height: 160px; opacity: 1; margin-top: 8px; }
+  .cell.chosen {
+    background: linear-gradient(135deg, var(--accent-soft), #eef4fa);
+    border-color: var(--accent);
+  }
+  .cell.chosen::after {
+    content: "LAERDAL"; position: absolute; top: 10px; right: 10px;
+    font-size: 9px; font-weight: 800; letter-spacing: 0.1em; color: #fff;
+    background: var(--accent); padding: 3px 7px; border-radius: 999px;
+  }
+  .cell.chosen .c-name { color: var(--accent-deep); padding-right: 60px; }
+
+  /* ---- Connect game ---- */
+  .connect-game { position: relative; }
+  .connect {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+    position: relative; align-items: start;
+  }
+  .connect-svg {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 1; overflow: visible;
+  }
+  .connect-col { display: flex; flex-direction: column; gap: 12px; position: relative; z-index: 2; }
+  .node {
+    text-align: left; border: 1px solid var(--rule); background: #f6f9fc;
+    border-radius: 10px; padding: 13px 15px; cursor: pointer; font-family: inherit;
+    color: var(--ink); transition: all .22s ease; font-size: 14px; line-height: 1.35;
+    position: relative;
+  }
+  .connect-col.left .node { font-family: 'Space Grotesk', sans-serif; font-weight: 600; }
+  .node:hover { border-color: var(--accent); transform: translateX(2px); }
+  .connect-col.right .node:hover { transform: translateX(-2px); }
+  .node.sel { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 0 0 3px rgba(0,62,116,.12); }
+  .node.done { border-color: var(--good); background: #eaf5ee; color: #1f5638; cursor: default; }
+  .node.done:hover { transform: none; }
+  .node.wrong { animation: shake .4s ease; border-color: var(--accent-warm); background: #f6ead3; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+  .node .dot-l, .node .dot-r {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 11px; height: 11px; border-radius: 50%; background: #fff;
+    border: 2px solid var(--accent);
+  }
+  .node .dot-r { right: -5.5px; }
+  .node .dot-l { left: -5.5px; }
+  .node.done .dot-l, .node.done .dot-r { background: var(--good); border-color: var(--good); }
+  .connect-status {
+    display: flex; align-items: center; gap: 14px; margin-top: 24px;
+    font-size: 14px; color: var(--muted); flex-wrap: wrap;
+  }
+  .connect-status .score { font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: var(--ink); }
+  .connect-status .done-msg { color: var(--good); font-weight: 600; opacity: 0; transition: opacity .4s ease; }
+  .connect-status .done-msg.show { opacity: 1; }
+  .btn-reset, .btn-answer {
+    border: 1px solid var(--rule); background: #f6f9fc; color: var(--muted);
+    border-radius: 999px; padding: 7px 16px; cursor: pointer; font-family: inherit;
+    font-size: 13px; transition: all .2s ease;
+  }
+  .btn-reset:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-answer:hover { border-color: var(--accent-warm); color: var(--accent-warm); }
+  @media (max-width: 640px) {
+    .connect { gap: 44px; }
+    .node { font-size: 13px; padding: 11px 12px; }
+  }
+
+  /* ---------- PLEDGE ---------- */
+  .pledge {
+    max-width: 900px; margin: 90px auto 0; padding: 0 28px;
+  }
+  .pledge-inner {
+    background: var(--ink); color: #eaf1f8; border-radius: 14px;
+    padding: 64px 56px; text-align: center; box-shadow: var(--shadow-lift);
+    position: relative; overflow: hidden;
+  }
+  .pledge-inner::before {
+    content: "\201C"; position: absolute; top: -10px; left: 28px;
+    font-family: 'Fraunces', Georgia, serif; font-size: 160px; color: var(--accent-warm); opacity: .4; line-height: 1;
+  }
+  .pledge-inner .pl-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.18em;
+    color: var(--accent-warm); font-weight: 700; margin-bottom: 22px; position: relative;
+  }
+  .pledge-inner blockquote {
+    margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 400;
+    font-size: clamp(22px, 3.2vw, 32px); line-height: 1.4; letter-spacing: -0.01em;
+    position: relative;
+  }
+  .pledge-inner blockquote em { color: #e3b67e; font-style: italic; }
+  @media (max-width: 640px) { .pledge-inner { padding: 44px 26px; } }
+
+  /* ---------- QUOTE CALLOUT (Jon) ---------- */
+  .callout {
+    max-width: 760px; margin: 40px auto; padding: 0 28px;
+  }
+  .callout-inner {
+    background: var(--paper); border: 1px solid var(--rule);
+    border-left: 4px solid var(--accent); border-radius: 12px;
+    padding: 32px 36px; box-shadow: var(--shadow);
+  }
+  .callout-inner .c-head {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+  }
+  .callout-inner .c-avatar {
+    width: 38px; height: 38px; border-radius: 50%; background: var(--accent);
+    color: #fff; display: grid; place-items: center; font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600; font-size: 15px; flex: none;
+  }
+  .callout-inner .c-meta { font-size: 13px; color: var(--muted); line-height: 1.3; }
+  .callout-inner .c-meta strong { color: var(--ink); font-weight: 600; display: block; font-size: 15px; }
+  .callout-inner blockquote {
+    margin: 0; font-size: 16px; color: var(--ink); line-height: 1.65;
+  }
+  .callout-inner blockquote p { margin: 0 0 14px; }
+  .callout-inner blockquote p:last-child { margin-bottom: 0; }
+
+  /* ---------- DECK CTA ---------- */
+  .deck { max-width: 720px; margin: 80px auto 0; padding: 0 28px; text-align: center; }
+  .deck h2 {
+    font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 32px;
+    letter-spacing: -0.02em; margin: 0 0 12px;
+  }
+  .deck p { color: var(--muted); margin: 0 0 28px; }
+  .deck-btn {
+    display: inline-flex; align-items: center; gap: 12px; padding: 15px 26px;
+    background: var(--paper); color: var(--accent); border: 1px solid var(--accent);
+    border-radius: 999px; text-decoration: none; font-weight: 600; font-size: 15px;
+    transition: all .3s cubic-bezier(.2,.8,.2,1);
+  }
+  .deck-btn:hover { background: var(--accent); color: #fff; transform: translateY(-3px); box-shadow: var(--shadow-lift); }
+  .deck-btn .ico { font-size: 17px; }
+
+  /* ---------- GALLERY (end) ---------- */
+  .gallery-section { max-width: 820px; margin: 90px auto 0; padding: 0 28px; }
+  .gallery-head { text-align: center; margin-bottom: 40px; }
+  .gallery-head h2 {
+    font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 38px;
+    letter-spacing: -0.02em; margin: 0 0 12px;
+  }
+  .gallery-head p { color: var(--muted); margin: 0; }
+
+  /* ---------- CLOSING ---------- */
+  .closing { max-width: 720px; margin: 90px auto 0; padding: 0 28px; text-align: center; }
+  .closing h2 {
+    font-family: 'Fraunces', Georgia, serif; font-weight: 400; font-style: italic;
+    font-size: clamp(30px, 4.5vw, 46px); line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 28px;
+  }
+  .closing p { color: var(--muted); font-size: 18px; }
+  .email-cta {
+    display: inline-flex; align-items: center; gap: 14px; margin-top: 40px;
+    padding: 16px 28px; background: var(--accent); color: #fff; border-radius: 999px;
+    text-decoration: none; font-family: 'Inter', sans-serif; font-weight: 500; font-size: 16px;
+    letter-spacing: -0.005em; box-shadow: 0 4px 16px rgba(0, 62, 116, 0.25);
+    transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease, background-color .3s ease; border: none;
+  }
+  .email-cta:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0, 62, 116, 0.35); background: var(--accent-deep); }
+  .email-cta-icon { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; font-size: 14px; }
+  .email-cta-arrow { display: inline-block; transition: transform .3s cubic-bezier(.2,.8,.2,1); }
+  .email-cta:hover .email-cta-arrow { transform: translateX(4px); }
+
+  /* ---------- SCROLL REVEAL ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1); will-change: opacity, transform; }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---------- LIGHTBOX ---------- */
+  .lightbox {
+    position: fixed; inset: 0; background: rgba(8,18,32,.93); z-index: 100;
+    display: none; align-items: center; justify-content: center; padding: 28px; cursor: zoom-out;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 92vw; max-height: 88vh; border-radius: 8px; box-shadow: 0 30px 80px rgba(0,0,0,.6); }
+  .lightbox .lb-cap { position: absolute; bottom: 22px; left: 0; right: 0; text-align: center; color: #d6e4f1; font-size: 13px; font-style: italic; }
+
+  /* ---------- FOOTER ---------- */
+  footer { margin-top: 120px; padding: 48px 28px; border-top: 1px solid var(--rule); text-align: center; font-size: 13px; color: var(--muted); }
+  footer .divider { width: 40px; height: 1px; background: var(--rule); margin: 0 auto 24px; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand">Breakout Strategy <span class="dot">·</span> The Laerdal Case</div>
+    <div class="nav-links">
+      <a href="#story">The Course</a>
+      <a href="#frameworks">Frameworks</a>
+      <a href="#interactive">Try It</a>
+      <a href="#proposal">The Proposal</a>
+      <a href="#reflection">Reflection</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="eyebrow">MBA · Breakout Strategy Elective · May 2026</div>
+  <h1>Breakout Strategy: three days learning how good companies become <em>great</em> ones.</h1>
+  <p class="lede">
+    For my latest MBA elective I spent three intensive days on how established companies achieve breakout, high growth.
+    Then I convinced my team to build a breakout strategy for my own employer, Laerdal Medical. This is what I learned,
+    the frameworks we used, and the strategy we pitched to a hypothetical CEO.
+  </p>
+  <div class="meta">
+    <span><strong>Author</strong>Yuanzhen Cai</span>
+    <span><strong>Programme</strong>Imperial College London · MBA</span>
+    <span><strong>Faculty</strong>Prof. Thomas C. Lawton</span>
+    <span><strong>Case company</strong>Laerdal Medical</span>
+    <span><strong>Format</strong>3-day intensive · Group H</span>
+  </div>
+</header>
+
+<div class="hero-image">
+  <figure data-lb="img/group-photo.jpg" data-cap="The Breakout Strategy elective cohort with Professor Thomas Lawton, Imperial College Business School.">
+    <img src="img/group-photo.jpg" alt="The Breakout Strategy elective cohort at Imperial College Business School" />
+  </figure>
+  <figcaption>The elective cohort with Professor Thomas Lawton, Imperial College Business School.</figcaption>
+</div>
+
+<article class="article" id="story">
+
+  <p class="first">
+    Strategy, until recently, was something I experienced one project at a time. As a designer at Laerdal Medical, I think
+    constantly about products, users, and the next release, but rarely about the company as a whole, at the altitude a CEO or
+    a board has to. This three-day Breakout Strategy elective at Imperial, led by Professor Thomas Lawton, was the first time
+    I was asked to do exactly that.
+  </p>
+
+  <p>
+    The premise is deceptively simple. Most companies grow incrementally; a rare few break out and achieve sustained,
+    double-digit growth. Breakout Strategy, the framework developed by Finkelstein, Harvey and Lawton, is a structured way to
+    diagnose why a company has stalled, choose a credible high-growth route, and pressure-test whether the strategy can survive
+    contact with markets, regulators, technology shifts and geopolitics.
+  </p>
+
+  <figure class="inline" data-lb="img/classroom.jpg" data-cap="Session 1, Realizing Your Breakout Potential, opening the elective with the Boston Beer case.">
+    <div class="frame"><img src="img/classroom.jpg" alt="Session 1 opening slide, Realizing Your Breakout Potential" /></div>
+    <figcaption>Session 1, Realizing Breakout Potential. The course opens with how small entrants come to reshape whole industries.</figcaption>
+  </figure>
+
+  <p>
+    Each team picks a real company and presents a recommended breakout strategy to a hypothetical CEO. When it came time to
+    choose, I made the case for studying Laerdal, the company I work for. I was genuinely glad the team agreed: it was a
+    chance to understand my own company at a level I never had before, and perhaps to surface a few suggestions that could be
+    useful to it. We became Group H, Laerdal Medical.
+  </p>
+
+  <div class="pullquote">
+    Until now my exposure to strategy had been mainly at the project level. This was the first time I had to think about the
+    whole company, and even learning the materials <em>stretched how I see what we do</em>.
+  </div>
+
+  <h3>Doing my homework, from the inside</h3>
+
+  <p>
+    Before going deep, I did something that made the whole project stronger: I reached out to Jon, a senior leader at Laerdal,
+    to ask for directions and the angles our team should explore, or avoid. I was conscious that I had one evening of
+    executive-altitude thinking against decades of his, so I wanted my analysis grounded in how the company actually sees
+    itself.
+  </p>
+
+  <p>My team had narrowed the field to three plausible breakout directions:</p>
+  <ul>
+    <li><strong>Software ecosystem play:</strong> strengthen Laerdal's software ecosystem and find ways to collect and monetise the data flowing through it.</li>
+    <li><strong>Asian market expansion:</strong> accelerate growth in Asia to unlock a larger profit pool.</li>
+    <li><strong>Scaling the RQI model:</strong> extend the subscription and competency model into high-margin emergency-training verticals beyond healthcare.</li>
+  </ul>
+
+  <p>
+    Jon's steer was clear: the first direction was the strongest. As he put it, it's the combination of software on top of
+    hardware, with content and user management, that will be powerful for us; selling competence and quality improvement as an
+    outcome. He also shared product-strategy and execution materials that reframed how I approached the assignment. That
+    conversation became the spine of our proposal: a platform breakout built on the hardware leadership Laerdal already owns.
+  </p>
+
+</article>
+
+<!-- ============ FRAMEWORKS ============ -->
+<section class="learnings" id="frameworks">
+  <h2>The frameworks that changed how I think</h2>
+  <p class="section-lede">
+    The course is cumulative; each worksheet builds on the last, moving from diagnosis to direction to delivery. These were
+    the five that reshaped how I see a business. Where it helps, I've made them interactive, so try them as you read.
+  </p>
+
+  <section class="day-card">
+    <h3><span class="day">Framework 01 · The diagnosis</span>The Capital Accumulation Cycle</h3>
+    <p>
+      The starting point isn't strategy, it's an honest audit of the capital a company has already accumulated, across four
+      forms: <strong>organisational, human, symbolic and social</strong>. A breakout happens when a company converts that
+      stored capital into a new growth engine. A stall happens when the conversion breaks down.
+    </p>
+    <p>
+      Running Laerdal through this was the moment the project clicked for me. Laerdal is extraordinarily capital-rich, but
+      almost all of it is locked into a <em>hardware</em> logic. The cycle stalls right at the point where data, software and
+      recurring revenue should be created. <em>Click each form of capital below to see what we found.</em>
+    </p>
+  </section>
+</section>
+
+<!-- Interactive 1: Capital cycle -->
+<div class="interactive">
+  <div class="ix-card">
+    <span class="ix-tag">◉ Interactive · Diagnostic</span>
+    <h3>Laerdal's four forms of capital</h3>
+    <p class="ix-sub">Tap a card to reveal the evidence and our strength rating.</p>
+    <div class="capitals" id="capitals">
+      <button class="cap" data-w="80%">
+        <div class="cap-ico">▤</div>
+        <div class="cap-name">Organisational</div>
+        <div class="cap-rate">Strong</div>
+        <div class="cap-body">Integrated supply chain, 30 global locations, $500M+ revenue, IFS Cloud ERP modernised in 2024. The plumbing to scale a different kind of business is in place.</div>
+        <div class="meter"><i></i></div>
+      </button>
+      <button class="cap" data-w="82%">
+        <div class="cap-ico">◉</div>
+        <div class="cap-name">Human</div>
+        <div class="cap-rate">Strong</div>
+        <div class="cap-body">80 years of accumulated knowledge. 160 specialists across 22 countries. Laerdal effectively invented the field of resuscitation science.</div>
+        <div class="meter"><i></i></div>
+      </button>
+      <button class="cap" data-w="96%">
+        <div class="cap-ico">✦</div>
+        <div class="cap-name">Symbolic</div>
+        <div class="cap-rate">Very strong</div>
+        <div class="cap-body">Family-owned and mission-driven. 60 years of CPR leadership. "Helping Save Lives" since 1940, a tagline that has been earned rather than marketed.</div>
+        <div class="meter"><i></i></div>
+      </button>
+      <button class="cap" data-w="84%">
+        <div class="cap-ico">❖</div>
+        <div class="cap-name">Social</div>
+        <div class="cap-rate">Strong</div>
+        <div class="cap-body">Partnerships with the AHA, NLN and national health charities; embedded in government healthcare systems. Relationships that took generations to build.</div>
+        <div class="meter"><i></i></div>
+      </button>
+    </div>
+    <div class="diagnosis">
+      <b>Diagnosis ·</b> Capital-rich across all four forms, but in hardware only. The cycle has stalled at the conversion
+      point to software, data, and recurring revenue. The breakout problem isn't a lack of resources; it's a lack of
+      <b>conversion</b>.
+    </div>
+  </div>
+</div>
+
+<section class="learnings">
+  <section class="day-card">
+    <h3><span class="day">Framework 02 · The data layer</span>Where the cycle compounds, or stalls</h3>
+    <p>
+      The most powerful idea in the diagnosis is that capital is supposed to <em>compound</em>. Hardware sales build
+      relationships, which build brand, which generate data, and that data should flow back in to fund the next loop. For
+      Laerdal, the loop stops dead at the data layer: every CPR session, every simulation hour, every compression depth is a
+      data point about human readiness, and today most of it simply evaporates on individual devices.
+    </p>
+    <p>
+      The proposed breakout closes the loop: hardware <em>plus</em> software, so every device generates data; data capture
+      becomes a product; readiness intelligence gets sold back to customers; lock-in deepens; recurring revenue compounds.
+      <em>Toggle between the two below.</em>
+    </p>
+  </section>
+</section>
+
+<!-- Interactive 2: Loop toggle -->
+<div class="interactive">
+  <div class="ix-card">
+    <span class="ix-tag">↺ Interactive · Before and after</span>
+    <h3>The capital loop, stalled vs. closed</h3>
+    <p class="ix-sub">Switch the view to see where the value leaks today, and how the breakout recaptures it.</p>
+    <div class="toggle-row">
+      <button id="btn-current" class="active">Today · stalls at data</button>
+      <button id="btn-proposed" class="proposed">Proposed · closed loop</button>
+    </div>
+    <div class="flow show" id="flow"></div>
+    <p class="ix-hint" id="flow-note" style="margin-top:18px;">Today the cycle breaks at the data layer, and value that should compound simply evaporates.</p>
+  </div>
+</div>
+
+<section class="learnings">
+  <section class="day-card">
+    <h3><span class="day">Framework 03 · The direction</span>The Routes to Breakout map</h3>
+    <p>
+      Once you know your capital position, the question becomes <em>which kind of breakout</em>. The framework lays out eight
+      archetypes across two axes: emergent versus established markets, and four growth postures (taking by storm, laggard to
+      leader, expanding horizons, shifting shape). Naming the route forces precision: you commit to a specific way of growing,
+      not a vague ambition.
+    </p>
+    <p>
+      For Laerdal we argued for a <em>combined</em> route: <strong>Big Improver</strong> (radically reconfiguring the core
+      from hardware-led to platform-led) and <strong>Early Adapter</strong> (carrying the simulation expertise into adjacent
+      high-risk verticals like mining, maritime and aviation). <em>Hover or tap any cell to see what it means; the two we
+      chose are highlighted.</em>
+    </p>
+  </section>
+</section>
+
+<!-- Interactive 3: Routes matrix -->
+<div class="interactive">
+  <div class="ix-card">
+    <span class="ix-tag">↗ Interactive · The map</span>
+    <h3>Routes to Breakout</h3>
+    <p class="ix-sub">Eight archetypes. Two markets. We chose two, so explore the rest.</p>
+    <div class="matrix-wrap">
+      <div class="matrix" id="matrix">
+        <div class="mh"></div>
+        <div class="mh">Emergent markets</div>
+        <div class="mh">Established markets</div>
+
+        <div class="rh">Taking by Storm</div>
+        <button class="cell"><div class="c-name">True Originals</div><div class="c-def">Carve out, shape and develop an entirely new market space.</div></button>
+        <button class="cell"><div class="c-name">Revolutionaries</div><div class="c-def">Redefine the ground rules of competition in an already established market.</div></button>
+
+        <div class="rh">Laggard to Leader</div>
+        <button class="cell"><div class="c-name">Wave Riders</div><div class="c-def">Migrate to occupy a rapidly expanding market space.</div></button>
+        <button class="cell chosen"><div class="c-name">Big Improvers</div><div class="c-def">Introduce a compelling new value proposition or business model to refashion a long-established market. <b>Laerdal: hardware-led to platform-led.</b></div></button>
+
+        <div class="rh">Expanding Horizons</div>
+        <button class="cell"><div class="c-name">Boundary Breakers</div><div class="c-def">Carry a winning formula from one geographic market into others.</div></button>
+        <button class="cell"><div class="c-name">Conquistadors</div><div class="c-def">Restructure and integrate once nationally distinct markets on a global basis.</div></button>
+
+        <div class="rh">Shifting Shape</div>
+        <button class="cell chosen"><div class="c-name">Early Adapters</div><div class="c-def">Migrate from one market space into a recently defined, rapidly expanding one. <b>Laerdal: into mining, maritime, aviation.</b></div></button>
+        <button class="cell"><div class="c-name">Power Players</div><div class="c-def">Shape, develop and dominate growing, knowledge-intensive, high-value supply chains.</div></button>
+      </div>
+    </div>
+    <p class="ix-hint" style="margin-top:16px;">Why now? The medical-simulation market is set to double to <strong>$7.2B by 2030</strong>, and the first-aid training market reaches <strong>$5.9B by 2033</strong>. The window is roughly three years before software-native entrants close it.</p>
+  </div>
+</div>
+
+<section class="learnings">
+  <section class="day-card">
+    <h3><span class="day">Framework 04 · The offer</span>Six pillars of the business model</h3>
+    <p>
+      Direction is nothing without delivery. The framework breaks any business model into <strong>six pillars</strong> (cost,
+      innovation, reliability, relationships, channels and brand) and asks how each must change to deliver the new value
+      proposition, on both a <em>techno-system</em> (what you build) and a <em>socio-system</em> (how people work) level.
+    </p>
+    <p>
+      This is where our strategy became concrete. Each pillar mapped to a specific move for Laerdal. To see whether the logic
+      holds together, <em>try matching each pillar to the move we proposed.</em>
+    </p>
+  </section>
+</section>
+
+<!-- Interactive 4: Connect game -->
+<div class="interactive" id="interactive">
+  <div class="ix-card connect-game">
+    <span class="ix-tag">⇄ Interactive · Connect the strategy</span>
+    <h3>Match the six pillars to Laerdal's moves</h3>
+    <p class="ix-sub">Click a pillar on the left, then the move on the right you think it powers. Get all six to win.</p>
+    <div class="connect" id="connect">
+      <svg class="connect-svg" id="connect-svg"></svg>
+      <div class="connect-col left" id="col-left"></div>
+      <div class="connect-col right" id="col-right"></div>
+    </div>
+    <div class="connect-status">
+      <span class="score" id="score">0 / 6 connected</span>
+      <span class="done-msg" id="done-msg">✓ That's the whole business model, well played.</span>
+      <button class="btn-answer" id="show-answer">Show answer</button>
+      <button class="btn-reset" id="reset">Reset</button>
+    </div>
+  </div>
+</div>
+
+<section class="learnings">
+  <section class="day-card">
+    <h3><span class="day">Framework 05 · The test</span>Leadership and competitive robustness</h3>
+    <p>
+      The final lens is robustness. A breakout audit scores five leadership capabilities (positive, negative, conceptual,
+      creative and relational) and asks which one carries the strategy and which one constrains it. For Laerdal, the
+      <em>enabling</em> capability is relational (80 years of institutional trust), and the <em>constraining</em> one is
+      negative capability: the courage to <strong>say no</strong> to easy hardware-only revenue.
+    </p>
+    <p>
+      The course also insists that in modern markets, the line between <em>market</em> and <em>nonmarket</em> competition has
+      collapsed (Doh, Lawton, Rajwani and Paroutis, 2014). You compete on product and on regulation, geopolitics and
+      stakeholder alignment at once, which is how we found Laerdal's sharpest exposure: a Suzhou manufacturing base feeding a
+      US-heavy revenue mix, right in the path of US-China tariff escalation.
+    </p>
+    <div class="note"><strong>The refusal.</strong> Every real breakout has a "we will not do this anymore" moment. For Laerdal it's simple and hard: no more standalone hardware without software on top. Refusal isn't a failure of imagination, it's the cultural test of whether the strategy is real.</div>
+  </section>
+</section>
+
+<figure class="inline" data-lb="img/guest-speaker.jpg" data-cap="Guest practitioner Alessandro Commito on Leading by Design: breakout leadership, innovation and investor logic.">
+  <div class="frame"><img src="img/guest-speaker.jpg" alt="Guest session, Leading by Design" /></div>
+  <figcaption>Guest session, Leading by Design, with practitioner Alessandro Commito on leadership and investor logic.</figcaption>
+</figure>
+
+<div class="stats-row">
+  <div class="stat-mini"><div class="num">4 → 1</div><div class="lbl">Four forms of capital, one stalled conversion point</div></div>
+  <div class="stat-mini"><div class="num">35%</div><div class="lbl">Software revenue at benchmark Surgical Science, Laerdal's gap</div></div>
+  <div class="stat-mini"><div class="num">30%+</div><div class="lbl">Target software revenue share by 2030 in our proposed vision</div></div>
+  <div class="stat-mini"><div class="num">90</div><div class="lbl">Days to prove the data loop before the window closes</div></div>
+</div>
+
+<figure class="wide" data-lb="img/presentation-3.jpg" data-cap="Presenting the recommended breakout strategy to the cohort and faculty, Imperial College Business School.">
+  <div class="frame"><img src="img/presentation-3.jpg" alt="Presenting the breakout strategy to the room" /></div>
+  <figcaption>Presentation day, walking the room through the recommendation for Laerdal.</figcaption>
+</figure>
+
+<!-- ============ THE PROPOSAL ============ -->
+<article class="article" id="proposal">
+  <h2>The breakout we proposed</h2>
+  <p>
+    Pulling it together, our pitch to a hypothetical Laerdal CEO was this: <em>Laerdal is a hidden champion standing at a
+    digital inflection point.</em> It has spent eighty years becoming the world's most trusted lifesaving-training company,
+    and it has quietly accumulated the data, brand and relationships to become something larger: <strong>the global standard
+    for human emergency readiness</strong>, across healthcare and industry.
+  </p>
+
+  <h3>From aspiration to commitment</h3>
+  <p>
+    We sharpened the vision from the aspirational <em>"help save one million more lives every year by 2030"</em> to something
+    a board can be held to: <em>"become the global standard for human emergency readiness across healthcare and industry by
+    2030, with 30%+ revenue from software."</em> Specific, time-bound, measurable.
+  </p>
+
+  <h3>How it gets delivered</h3>
+  <p>
+    The value proposition shifts from a premium hardware brand to an accessible readiness platform: proactive dashboards and
+    skill-decay alerts, sector-specific simulation modules, and an <em>insurance integration</em> that turns readiness data
+    into something an underwriter will pay for. And it's sequenced with healthcare-first discipline:
+  </p>
+  <ul>
+    <li><strong>90 days:</strong> prove the loop. Activate data feedback on the existing installed base; run two flagship hospital pilots; bring the board hard evidence.</li>
+    <li><strong>Year 1:</strong> launch the platform. Readiness Platform MVP live, anchor enterprise health-system clients, open Singapore as the Asia-Pacific beachhead.</li>
+    <li><strong>Year 3:</strong> define the category. Full platform across 6+ sectors, 30%+ software revenue, presence in 5+ Asian markets.</li>
+  </ul>
+  <p>
+    The risk, we were honest, is not capability, it's <em>speed</em>. If Laerdal can't activate the data loop fast enough, a
+    software-native or AI-native entrant closes the gap from the other side.
+  </p>
+</article>
+
+<figure class="wide" data-lb="img/presentation-2.jpg" data-cap="Presenting in front of the Laerdal title slide: from lifesaving hardware leader to the global standard for emergency readiness.">
+  <div class="frame"><img src="img/presentation-2.jpg" alt="Presenting in front of the Laerdal title slide" /></div>
+  <figcaption>The opening of our pitch: Laerdal as a hidden champion at a digital inflection point.</figcaption>
+</figure>
+
+<!-- Pledge -->
+<section class="pledge">
+  <div class="pledge-inner">
+    <div class="pl-label">The strategic pledge</div>
+    <blockquote>
+      Laerdal is the world's most trusted lifesaving training company that <em>hasn't yet built the platform</em> its data,
+      brand, and relationships have already earned.
+    </blockquote>
+  </div>
+</section>
+
+<!-- ============ REFLECTION ============ -->
+<article class="article" id="reflection">
+  <h2>What I took away</h2>
+
+  <figure class="inline" data-lb="img/presentation-1.jpg" data-cap="Pitching the recommendation to faculty on presentation day.">
+    <div class="frame"><img src="img/presentation-1.jpg" alt="Presenting to the professor on presentation day" /></div>
+    <figcaption>Presentation day, making the case to faculty.</figcaption>
+  </figure>
+
+  <p>
+    The presentation went well, better than I'd hoped. Several classmates came up afterwards to say how impressive they found
+    Laerdal as a company, and the professor mentioned he'd be interested in following up on the work. That meant a lot, because
+    for one evening of executive-altitude thinking, I was acutely aware of how much I didn't know.
+  </p>
+
+  <p>
+    I want to be honest about the limits of the work. We built this in a very short window, from outside the company, so there
+    are certainly places where the analysis misreads the real situation. That is exactly where the most valuable feedback came
+    from. After I shared the deck, Jon pushed back with the kind of detail only someone inside the strategy could give:
+  </p>
+</article>
+
+<div class="callout">
+  <div class="callout-inner">
+    <div class="c-head">
+      <div class="c-avatar">J</div>
+      <div class="c-meta"><strong>Jon</strong>Senior leader, Laerdal Medical</div>
+    </div>
+    <blockquote>
+      <p>"We invested significantly in this work last year and are now fully in execution mode.</p>
+      <p>Regarding your slides, it may also be worth noting that with RQI we now have more than 50% of our bottom line coming
+      from a highly digital, multi-year, contract-based business focused on certification and software. As a result, we have
+      shifted substantially away from a pure hardware focus.</p>
+      <p>Of the roughly 700 people in Lifesaver Solutions, about 300 are based in Bangalore (LMS focused, software), 130 in
+      Copenhagen (virtual learning products and Data &amp; AI), and 70 in DC (SimCapture). In addition, around 60 to 80 people
+      in Stavanger work on software.</p>
+      <p>That said, we still have a long way to go to fully realize our strategic ambition of becoming a competence and quality
+      improvement provider, where software, user identity, and content are delivered across both software and hardware
+      solutions."</p>
+    </blockquote>
+  </div>
+</div>
+
+<article class="article">
+  <p>
+    I found this genuinely clarifying. The breakout we proposed from the outside is, in important ways, already underway from
+    the inside, and further along than a student team could see. If anything, that reinforced the core thesis: the platform
+    that Laerdal's data, brand and relationships have earned is being built, and the real challenge is execution and speed.
+  </p>
+
+  <div class="pullquote">
+    The breakout problem is rarely a lack of resources. More often it's a lack of <em>conversion</em>, and the courage to
+    refuse the easy path that keeps you where you are.
+  </div>
+
+  <p>
+    My thanks to Professor Lawton and Alessandro Commito for three formative days, to Group H for trusting me with the case,
+    and above all to Jon, for the directions, the materials, and for taking a student project seriously. This newsletter is one
+    of the learnings I promised to share.
+  </p>
+</article>
+
+<!-- ============ THE DECK ============ -->
+<section class="deck">
+  <h2>Read the full presentation</h2>
+  <p>The complete Group H deck we presented, frameworks, diagnosis, roadmap and all.</p>
+  <a class="deck-btn" href="Group-H-Laerdal-Breakout-Strategy.pdf" target="_blank" rel="noopener">
+    <span class="ico" aria-hidden="true">▤</span>
+    <span>Group H · Laerdal Breakout Strategy (PDF)</span>
+    <span class="email-cta-arrow" aria-hidden="true">→</span>
+  </a>
+</section>
+
+<!-- ============ END GALLERY ============ -->
+<section class="gallery-section" id="gallery">
+  <div class="gallery-head">
+    <h2>Beyond the sessions</h2>
+    <p>The work behind the pitch, and a break with the cohort.</p>
+  </div>
+  <figure class="duo-figure">
+    <div class="duo">
+      <div class="frame" data-lb="img/group-discussion.jpg" data-cap="Group H mapping the six value-proposition elements on the whiteboard.">
+        <img src="img/group-discussion.jpg" alt="The team mapping the value proposition" />
+      </div>
+      <div class="frame" data-lb="img/beyond-class.jpg" data-cap="A break with the cohort in South Kensington.">
+        <img src="img/beyond-class.jpg" alt="Lunch with classmates" />
+      </div>
+    </div>
+    <figcaption>Group H at work mapping the value proposition, and a well-earned break with the cohort.</figcaption>
+  </figure>
+</section>
+
+<section class="closing">
+  <h2>I came away seeing my own company differently.</h2>
+  <p>
+    If you'd like to talk through the frameworks, the Laerdal proposal, or where you think it gets the company wrong, I'd love
+    to compare notes, and I'm very happy to share the full deck.
+  </p>
+  <a class="email-cta" href="mailto:yuanzhen.cai@laerdal.com">
+    <span class="email-cta-icon" aria-hidden="true">✉</span>
+    <span class="email-cta-text">yuanzhen.cai@laerdal.com</span>
+    <span class="email-cta-arrow" aria-hidden="true">→</span>
+  </a>
+</section>
+
+<footer>
+  <div class="divider"></div>
+  <div>Yuanzhen Cai · Imperial College London MBA</div>
+  <div style="margin-top: 6px;">Breakout Strategy Elective · Group H, Laerdal Medical · May 2026</div>
+</footer>
+
+<div class="lightbox" id="lightbox">
+  <img id="lb-img" src="" alt="" />
+  <div class="lb-cap" id="lb-cap"></div>
+</div>
+
+<script>
+(function () {
+  const motionOK = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+
+  /* ---------- Scroll reveal ---------- */
+  if (motionOK && 'IntersectionObserver' in window) {
+    const targets = document.querySelectorAll(
+      'figure, .day-card, .pullquote, .ix-card, .stats-row, .gallery-head, .closing h2, .closing p, .email-cta, .learnings > h2, .learnings > .section-lede, .gallery-section, .pledge-inner, .article h2, .callout-inner, .deck h2, .deck p, .deck-btn'
+    );
+    targets.forEach(el => el.classList.add('reveal'));
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+    targets.forEach(el => io.observe(el));
+  }
+
+  /* ---------- Nav shadow ---------- */
+  const nav = document.querySelector('.nav');
+  const onScroll = () => { if (window.scrollY > 12) nav.classList.add('scrolled'); else nav.classList.remove('scrolled'); };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  /* ---------- Capital cards ---------- */
+  document.querySelectorAll('#capitals .cap').forEach(c => {
+    c.style.setProperty('--w', c.dataset.w || '80%');
+    c.addEventListener('click', () => c.classList.toggle('open'));
+  });
+
+  /* ---------- Loop toggle ---------- */
+  const flow = document.getElementById('flow');
+  const flowNote = document.getElementById('flow-note');
+  const btnCur = document.getElementById('btn-current');
+  const btnPro = document.getElementById('btn-proposed');
+  const CURRENT = [
+    {i:'▤', t:'Hardware sales'},
+    {i:'⚿', t:'Institutional relationships'},
+    {i:'✦', t:'Brand equity'},
+    {i:'◉', t:'Data generated'},
+    {i:'✗', t:'Not captured', bad:true}
+  ];
+  const PROPOSED = [
+    {i:'⊞', t:'Hardware + software'},
+    {i:'◉', t:'Data capture', gain:true},
+    {i:'◈', t:'Readiness intelligence', gain:true},
+    {i:'⚓', t:'Deeper lock-in', gain:true},
+    {i:'$', t:'Recurring revenue', gain:true},
+    {i:'↺', t:'Reinvested into capital', loopback:true}
+  ];
+  function renderFlow(steps) {
+    flow.classList.remove('show');
+    flow.innerHTML = '';
+    steps.forEach((s, idx) => {
+      if (idx > 0) {
+        const a = document.createElement('div'); a.className = 'arrow'; a.textContent = '→'; flow.appendChild(a);
+      }
+      const d = document.createElement('div');
+      d.className = 'step' + (s.bad ? ' bad' : '') + (s.gain ? ' gain' : '') + (s.loopback ? ' loopback' : '');
+      d.style.transitionDelay = (idx * 70) + 'ms';
+      d.innerHTML = '<div class="s-ico">' + s.i + '</div><div class="s-txt">' + s.t + '</div>';
+      flow.appendChild(d);
+    });
+    requestAnimationFrame(() => requestAnimationFrame(() => flow.classList.add('show')));
+  }
+  btnCur.addEventListener('click', () => {
+    btnCur.classList.add('active'); btnPro.classList.remove('active');
+    renderFlow(CURRENT);
+    flowNote.textContent = 'Today the cycle breaks at the data layer, and value that should compound simply evaporates.';
+  });
+  btnPro.addEventListener('click', () => {
+    btnPro.classList.add('active'); btnCur.classList.remove('active');
+    renderFlow(PROPOSED);
+    flowNote.textContent = 'The closed loop compounds across all four forms of capital: every device feeds the platform, and revenue recurs.';
+  });
+  renderFlow(CURRENT);
+
+  /* ---------- Matrix cells ---------- */
+  document.querySelectorAll('#matrix .cell').forEach(c => {
+    c.addEventListener('click', () => c.classList.toggle('open'));
+  });
+
+  /* ---------- Connect game ---------- */
+  const PILLARS = [
+    {id:'cost',      name:'Cost',          move:'Build the SaaS platform on SimCapture / HeartCode, then retrain the sales force from hardware quotas to software ARR.'},
+    {id:'innovation',name:'Innovation',    move:'Sector-specific simulation modules for mining, maritime and aviation: same engine, new scenario libraries.'},
+    {id:'reliability',name:'Reliability',  move:'Hardware to platform data feedback loops, backed by 60 years of clinical validation.'},
+    {id:'relationships',name:'Relationships',move:'CRM and compliance integration with HR / HSE systems, plus partnerships with insurers and regulators.'},
+    {id:'channels',  name:'Channels',      move:'Cloud and mobile-first deployment, with Singapore (maritime) and Australia (mining) as beachheads.'},
+    {id:'brand',     name:'Brand',         move:'Launch the "Readiness Platform" identity and sponsor industry safety summits to set the standard.'}
+  ];
+  const RIGHT_ORDER = [2, 5, 0, 3, 1, 4];
+  const colL = document.getElementById('col-left');
+  const colR = document.getElementById('col-right');
+  const svg = document.getElementById('connect-svg');
+  const connectWrap = document.getElementById('connect');
+  const scoreEl = document.getElementById('score');
+  const doneMsg = document.getElementById('done-msg');
+  let selectedLeft = null;
+  let connections = [];
+
+  function buildGame() {
+    colL.innerHTML = ''; colR.innerHTML = ''; svg.innerHTML = '';
+    connections = []; selectedLeft = null;
+    PILLARS.forEach(p => {
+      const b = document.createElement('button');
+      b.className = 'node'; b.dataset.id = p.id;
+      b.innerHTML = p.name + '<span class="dot-r"></span>';
+      colL.appendChild(b);
+    });
+    RIGHT_ORDER.forEach(i => {
+      const p = PILLARS[i];
+      const b = document.createElement('button');
+      b.className = 'node'; b.dataset.match = p.id;
+      b.innerHTML = '<span class="dot-l"></span>' + p.move;
+      colR.appendChild(b);
+    });
+    updateScore();
+    bind();
+  }
+
+  function bind() {
+    colL.querySelectorAll('.node').forEach(n => n.addEventListener('click', () => {
+      if (n.classList.contains('done')) return;
+      colL.querySelectorAll('.node').forEach(x => x.classList.remove('sel'));
+      selectedLeft = n; n.classList.add('sel');
+    }));
+    colR.querySelectorAll('.node').forEach(n => n.addEventListener('click', () => {
+      if (n.classList.contains('done') || !selectedLeft) return;
+      const ok = selectedLeft.dataset.id === n.dataset.match;
+      if (ok) {
+        connect(selectedLeft, n);
+        selectedLeft = null;
+      } else {
+        n.classList.add('wrong');
+        setTimeout(() => n.classList.remove('wrong'), 450);
+      }
+    }));
+  }
+
+  function connect(l, r) {
+    l.classList.remove('sel');
+    l.classList.add('done');
+    r.classList.add('done');
+    drawLine(l, r, l.dataset.id);
+    updateScore();
+  }
+
+  function drawLine(l, r, id) {
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    line.setAttribute('stroke', '#2f7d4f');
+    line.setAttribute('stroke-width', '2.5');
+    line.setAttribute('fill', 'none');
+    line.setAttribute('stroke-linecap', 'round');
+    svg.appendChild(line);
+    connections.push({ id, l, r, line });
+    positionLines();
+  }
+
+  function positionLines() {
+    const wrap = connectWrap.getBoundingClientRect();
+    svg.setAttribute('viewBox', '0 0 ' + wrap.width + ' ' + wrap.height);
+    connections.forEach(c => {
+      const lr = c.l.getBoundingClientRect();
+      const rr = c.r.getBoundingClientRect();
+      const x1 = lr.right - wrap.left, y1 = lr.top + lr.height/2 - wrap.top;
+      const x2 = rr.left - wrap.left, y2 = rr.top + rr.height/2 - wrap.top;
+      const mx = (x1 + x2) / 2;
+      c.line.setAttribute('d', `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`);
+    });
+  }
+
+  function updateScore() {
+    const done = connections.length;
+    scoreEl.textContent = done + ' / 6 connected';
+    if (done === 6) doneMsg.classList.add('show'); else doneMsg.classList.remove('show');
+  }
+
+  function showAnswer() {
+    selectedLeft = null;
+    colL.querySelectorAll('.node').forEach(x => x.classList.remove('sel'));
+    const connectedIds = new Set(connections.map(c => c.id));
+    PILLARS.forEach(p => {
+      if (connectedIds.has(p.id)) return;
+      const l = colL.querySelector('.node[data-id="' + p.id + '"]');
+      const r = colR.querySelector('.node[data-match="' + p.id + '"]');
+      if (l && r) connect(l, r);
+    });
+  }
+
+  document.getElementById('reset').addEventListener('click', buildGame);
+  document.getElementById('show-answer').addEventListener('click', showAnswer);
+  window.addEventListener('resize', positionLines, { passive: true });
+  buildGame();
+
+  /* ---------- Lightbox ---------- */
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lb-img');
+  const lbCap = document.getElementById('lb-cap');
+  document.querySelectorAll('[data-lb]').forEach(el => {
+    el.style.cursor = 'zoom-in';
+    el.addEventListener('click', () => {
+      lbImg.src = el.dataset.lb;
+      lbCap.textContent = el.dataset.cap || '';
+      lb.classList.add('open');
+    });
+  });
+  lb.addEventListener('click', () => lb.classList.remove('open'));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') lb.classList.remove('open'); });
+})();
+</script>
+</body>
+</html>
